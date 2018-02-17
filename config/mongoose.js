@@ -4,11 +4,16 @@ const config = require('./config')
 module.exports = async () => {
   try {
     mongoose.Promise = Promise
-    await mongoose.connect(config.dbUri)
+    mongoose.connect(config.dbUri)
 
-    const monDb = mongoose.connection
-    monDb.on('error', console.error.bind(console, 'Connection Error:'))
-    monDb.once('open', () => console.log(`Connected Successfully to DB: ${monDb.db.s.databaseName}`))
+    const db = mongoose.connection
+    db.on('error', console.error.bind(console, 'Connection Error:'))
+    db.once('open', () => {
+      console.log(`Connected Successfully to DB: ${db.db.s.databaseName}`)
+    })
+
+    // load all the models
+    require('../api/v1/auth/auth.model')(config)
   } catch (err) {
     console.log(err)
   }
