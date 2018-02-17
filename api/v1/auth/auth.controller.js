@@ -4,9 +4,16 @@ const uid = require('uid-promise')
 const uuid = require('uuid/v4')
 const removeExpiredRequests = require('./lib/removeExpired')
 const nodemailer = require('nodemailer')
+const exphbs = require('express-handlebars')
+const hbs = require('nodemailer-express-handlebars')
 
 module.exports = (config) => {
   const transporter = nodemailer.createTransport(config.email)
+  transporter.use('compile', hbs({
+    viewEngine: exphbs,
+    extName: '.hbs',
+    viewPath: 'views'
+  }))
 
   const requestLogin = async (req, res, next) => {
     try {
@@ -56,12 +63,17 @@ module.exports = (config) => {
 
       // send the verification link!
       const verificationLink = `${config.baseUrl}/v1/auth/confirm?email=${encodeURIComponent(user.email)}&token=${encodeURIComponent(login.mlid)}`
+      const username = user.email.substring(0, user.email.indexOf('@'))
       let mailOpts = {
         from: config.emailFrom,
         to: email,
         subject: 's3d Login Verification',
-        text: `Please folow this link to login to s3d: ${verificationLink}`,
-        html: `<p>Please folow this link to login to s3d: <a href="${verificationLink}">${verificationLink}</a></p>`
+        template: 'email',
+        context: {
+          verificationLink,
+          username
+        },
+        text: `Please folow this link to login to s3d: ${verificationLink}`
       }
       await transporter.sendMail(mailOpts)
 
