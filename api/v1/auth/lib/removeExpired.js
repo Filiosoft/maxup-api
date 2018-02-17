@@ -5,7 +5,9 @@ module.exports = async (email) => {
     const user = await User.findOne({
       email
     })
-
+    if (!user) {
+      return
+    }
     user.__private.logins = user.__private.logins.filter(login => {
       const now = new Date()
       // we are past the expiration date, remove the login request

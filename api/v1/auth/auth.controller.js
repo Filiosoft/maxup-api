@@ -50,7 +50,7 @@ module.exports = (config) => {
       removeExpiredRequests(email)
 
       await user.save()
-      console.log(`Folow this link to login: ${config.baseUrl}/v1/atuh/confirm?email=${encodeURIComponent(user.email)}&token=${login.mlid}`)
+      console.log(`Folow this link to login: ${config.baseUrl}/v1/auth/confirm?email=${encodeURIComponent(user.email)}&token=${encodeURIComponent(login.mlid)}`)
 
       return res.status(200).json({
         token: login.lrid
@@ -60,7 +60,57 @@ module.exports = (config) => {
     }
   }
 
+  const confirmRequest = async (req, res, next) => {
+    try {
+      const {
+        email,
+        token
+      } = req.query
+      await removeExpiredRequests(email)
+      if (!email) {
+        return next('NoEmail')
+      }
+      if (!token) {
+        return next('NoToken')
+      }
+
+      const user = await User.findOne({
+        email
+      })
+
+      // if the user wasn't found, fail
+      if (!user) {
+        return next('ConfirmationFailed')
+      }
+
+      const logins = user.__private.logins
+      let login = logins.find(login => {
+        return login.mlid === token
+      })
+
+      // if the request wasn't found, fail
+      if (!login) {
+        return next('ConfirmationFailed')
+      }
+
+      // if this request is already verified, fail
+      if (login.verified) {
+        return next('ConfirmationFailed')
+      }
+      login.verified = true
+
+      await user.save()
+
+      return res.status(200).json({
+        message: 'Login verified!'
+      })
+    } catch (err) {
+      return next(err)
+    }
+  }
+
   return {
-    requestLogin
+    requestLogin,
+    confirmRequest
   }
 }

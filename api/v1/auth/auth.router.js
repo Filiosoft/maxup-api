@@ -7,6 +7,8 @@ module.exports = (app, config) => {
 
   authRouter.post('/', authCtrl.requestLogin)
 
+  authRouter.get('/confirm', authCtrl.confirmRequest)
+
   authRouter.get('/whoami', requireAuth)
 
   return authRouter

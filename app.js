@@ -12,6 +12,9 @@ require('./config/express')(app)
 // Routes config
 require('./config/routes')(app, config)
 
+// Recuring tasks
+require('./config/tasks')()
+
 app.listen(config.port, () => {
   console.log('s3d Listening on ' + config.port)
   console.log(`API Address: ${config.baseUrl}/v1`)

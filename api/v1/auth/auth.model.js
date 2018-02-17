@@ -21,6 +21,11 @@ module.exports = (config) => {
     created: {
       type: Date,
       required: true
+    },
+    verified: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   })
   const userSchema = new Schema({
