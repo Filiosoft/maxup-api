@@ -3,8 +3,11 @@ const User = mongoose.model('User')
 const uid = require('uid-promise')
 const uuid = require('uuid/v4')
 const removeExpiredRequests = require('./lib/removeExpired')
+const nodemailer = require('nodemailer')
 
 module.exports = (config) => {
+  const transporter = nodemailer.createTransport(config.email)
+
   const requestLogin = async (req, res, next) => {
     try {
       const {
@@ -50,7 +53,17 @@ module.exports = (config) => {
       removeExpiredRequests(email)
 
       await user.save()
-      console.log(`Folow this link to login: ${config.baseUrl}/v1/auth/confirm?email=${encodeURIComponent(user.email)}&token=${encodeURIComponent(login.mlid)}`)
+
+      // send the verification link!
+      const verificationLink = `${config.baseUrl}/v1/auth/confirm?email=${encodeURIComponent(user.email)}&token=${encodeURIComponent(login.mlid)}`
+      let mailOpts = {
+        from: config.emailFrom,
+        to: email,
+        subject: 's3d Login Verification',
+        text: `Please folow this link to login to s3d: ${verificationLink}`,
+        html: `<p>Please folow this link to login to s3d: <a href="${verificationLink}">${verificationLink}</a></p>`
+      }
+      await transporter.sendMail(mailOpts)
 
       return res.status(200).json({
         token: login.lrid
