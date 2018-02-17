@@ -109,8 +109,64 @@ module.exports = (config) => {
     }
   }
 
+  const verifyRequestConfirmation = async (req, res, next) => {
+    try {
+      const {
+        email,
+        token
+      } = req.query
+      await removeExpiredRequests(email)
+      if (!email) {
+        return next('NoEmail')
+      }
+      if (!token) {
+        return next('NoToken')
+      }
+
+      const user = await User.findOne({
+        email
+      })
+
+      // if the user wasn't found, fail
+      if (!user) {
+        return next('ConfirmationFailed')
+      }
+
+      const logins = user.__private.logins
+      let login = logins.find(login => {
+        return login.lrid === token
+      })
+
+      // if the request wasn't found, fail
+      if (!login) {
+        return next('ConfirmationFailed')
+      }
+
+      // if this request is already verified, fail
+      if (!login.verified) {
+        return next('ConfirmationFailed')
+      }
+
+      // remove the login request from the user to keep things clean
+      user.__private.logins = user.__private.logins.filter(login => {
+        return login.lrid !== token
+      })
+
+      await user.save()
+
+      // generate a jwt
+      const jwt = await user.generateJwt()
+      return res.status(200).json({
+        token: jwt
+      })
+    } catch (err) {
+      return next(err)
+    }
+  }
+
   return {
     requestLogin,
-    confirmRequest
+    confirmRequest,
+    verifyRequestConfirmation
   }
 }

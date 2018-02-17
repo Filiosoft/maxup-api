@@ -96,7 +96,6 @@ module.exports = function (app, config) {
 
   apiRouter.use('/auth', require('./auth/auth.router')(app, config))
 
-
   // Use it!
   app.use('/v1', apiRouter)
 }

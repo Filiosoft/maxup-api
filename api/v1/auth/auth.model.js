@@ -39,14 +39,13 @@ module.exports = (config) => {
     }
   })
 
-  userSchema.methods.generateJwt = function () {
+  userSchema.methods.generateJwt = () => {
     const expiry = new Date()
     expiry.setDate(expiry.getDate() + 7)
 
     return jwt.sign({
       _id: this._id,
       email: this.email,
-      username: this.username,
       exp: parseInt(expiry.getTime() / 1000)
     }, config.jwtSecret)
   }
