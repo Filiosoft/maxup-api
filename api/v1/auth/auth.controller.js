@@ -177,9 +177,32 @@ module.exports = (config) => {
     }
   }
 
+  const whoami = async (req, res, next) => {
+    try {
+      const {
+        email
+      } = req.payload
+
+      const user = await User.findOne({
+        email
+      }).select('-__private')
+
+      if (!user) {
+        return next('NotFound')
+      }
+
+      return res.status(200).json({
+        email: user.email
+      })
+    } catch (err) {
+      return next(err)
+    }
+  }
+
   return {
     requestLogin,
     confirmRequest,
-    verifyRequestConfirmation
+    verifyRequestConfirmation,
+    whoami
   }
 }
