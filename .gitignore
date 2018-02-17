@@ -74,3 +74,5 @@ tsconfig.json
 jsconfig.json
 
 # End of https://www.gitignore.io/api/code
+
+tests/

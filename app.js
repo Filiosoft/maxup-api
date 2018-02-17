@@ -13,11 +13,11 @@ require('./config/express')(app)
 require('./config/routes')(app, config)
 
 app.listen(config.port, () => {
-    console.log('s3d Listening on ' + config.port)
-    if (app.get('env') === 'development') {
-        console.log(`API Address: http://localhost:${config.port}/api`)
-    } else {
-        console.log(`API Address: ${config.baseUrl}/api`)
-    }
-    console.log(`Host: ${os.hostname()}\n`)
+  console.log('s3d Listening on ' + config.port)
+  if (app.get('env') === 'development') {
+    console.log(`API Address: http://localhost:${config.port}/api`)
+  } else {
+    console.log(`API Address: ${config.baseUrl}/api`)
+  }
+  console.log(`Host: ${os.hostname()}\n`)
 })
