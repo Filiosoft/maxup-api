@@ -1,2 +1,2 @@
 # s3d-api
-⚙ The serverless API for s3d!
+⚙ The API for s3d!
