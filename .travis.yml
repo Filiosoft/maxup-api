@@ -5,3 +5,11 @@ cache:
   yarn: true
   directories:
     - "node_modules"
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  local-dir: tests
+  keep-history: true
+  on:
+    branch: master

@@ -22,7 +22,7 @@
     "dev": "nodemon app.js",
     "start": "node app.js",
     "test": "yarn run eslint-report && yarn run eslint",
-    "eslint-report": "eslint . -f node_modules/eslint-html-reporter/reporter.js -o tests/report.html || exit 0",
+    "eslint-report": "eslint . -f node_modules/eslint-html-reporter/reporter.js -o tests/eslint.html || exit 0",
     "eslint": "eslint ."
   },
   "devDependencies": {
