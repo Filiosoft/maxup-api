@@ -40,14 +40,11 @@ module.exports = (config) => {
   })
 
   userSchema.methods.generateJwt = function () {
-    const expiry = new Date()
-    expiry.setDate(expiry.getDate() + 7)
-
     return jwt.sign({
       _id: this._id,
       email: this.email
     }, config.jwtSecret, {
-      expiresIn: parseInt(expiry.getTime() / 1000)
+      expiresIn: '365d'
     })
   }
 
