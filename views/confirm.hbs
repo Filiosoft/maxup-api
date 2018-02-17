@@ -1,0 +1,15 @@
+<div class="content vertical-center">
+    <div class="container">
+        <h1>Verifying...</h1>
+    </div>
+</div>
+<script>
+    setTimeout(function () {
+        $.get('{{baseUrl}}/v1/auth/confirm?email=' + encodeURIComponent('{{email}}') + '&token={{token}}', function (data) {
+            window.location.href = '/notifications/email-confirmed';
+        })
+            .fail(function (err) {
+                window.location.href = '/notifications/authentication-failed';
+            })
+    }, 2000)
+</script>

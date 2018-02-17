@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 const pkg = require('../package.json')
+const exphbs = require('express-handlebars')
 
 module.exports = app => {
   app.use(helmet())
@@ -21,6 +22,11 @@ module.exports = app => {
     res.header('Server', `s3d-api (${pkg.version})`)
     next()
   })
+
+  app.engine('.hbs', exphbs({
+    extname: '.hbs'
+  }))
+  app.set('view engine', '.hbs')
 
   // Use morgan to log requests to the console
   app.use(morgan('dev'))

@@ -62,7 +62,7 @@ module.exports = (config) => {
       await user.save()
 
       // send the verification link!
-      const verificationLink = `${config.baseUrl}/v1/auth/confirm?email=${encodeURIComponent(user.email)}&token=${encodeURIComponent(login.mlid)}`
+      const verificationLink = `${config.baseUrl}/confirm?email=${encodeURIComponent(user.email)}&token=${encodeURIComponent(login.mlid)}`
       const username = user.email.substring(0, user.email.indexOf('@'))
       let mailOpts = {
         from: config.emailFrom,
