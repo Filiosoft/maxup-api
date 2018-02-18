@@ -30,17 +30,16 @@ module.exports = function (app, config) {
    * @apiSuccessExample {json} Success-Response:
    *    HTTP/1.1 200 OK
    *     {
-   *      "message": "s3d API",
-   *      "version": "0.0.1",
+   *      "message": "maxup API",
    *      "env": "production",
    *      "host": "e233ef5e0373"
    *    }
    * @apiExample {curl} Example usage:
-   *      curl -i https://api.s3d.sh/v1
+   *      curl -i https://api.maxup.sh/v1
    */
   apiRouter.get('/', function (req, res) {
     return res.json({
-      message: `s3d API`,
+      message: `maxup API`,
       version: `${pkg.version}`,
       env: app.get('env'),
       host: os.hostname()
@@ -60,7 +59,7 @@ module.exports = function (app, config) {
    * @apiError (500) {Object} Disconnected The database is disconnected
    *
    * @apiExample {curl} Example usage:
-   *     curl -i https://api.s3d.sh/v1/healthcheck
+   *     curl -i https://api.maxup.sh/v1/healthcheck
    * @apiSuccessExample {json} Success-Response:
    *     HTTP/1.1 200 OK
    *     {

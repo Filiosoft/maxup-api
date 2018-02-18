@@ -16,7 +16,7 @@ require('./config/routes')(app, config)
 require('./config/tasks')()
 
 app.listen(config.port, () => {
-  console.log('s3d Listening on ' + config.port)
+  console.log('maxup Listening on ' + config.port)
   console.log(`API Address: ${config.baseUrl}/v1`)
   console.log(`Host: ${os.hostname()}\n`)
 })

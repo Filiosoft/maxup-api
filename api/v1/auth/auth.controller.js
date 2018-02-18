@@ -67,13 +67,13 @@ module.exports = (config) => {
       let mailOpts = {
         from: config.emailFrom,
         to: email,
-        subject: 's3d Login Verification',
+        subject: 'maxup Login Verification',
         template: 'email',
         context: {
           verificationLink,
           username
         },
-        text: `Please folow this link to login to s3d: ${verificationLink}`
+        text: `Please folow this link to login to maxup: ${verificationLink}`
       }
       await transporter.sendMail(mailOpts)
 
