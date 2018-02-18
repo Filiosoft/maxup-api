@@ -32,7 +32,7 @@
     "test": "yarn run eslint-report && yarn run eslint",
     "eslint-report": "eslint . -f node_modules/eslint-html-reporter/reporter.js -o tests/eslint.html || exit 0",
     "eslint": "eslint .",    
-    "docs": "apidoc -i api/ -o docs/ && cp -r tests/ docs/"
+    "docs": "apidoc -i api/ -o docs/ && cp -r tests/ docs/ && echo docs.maxup.sh > docs/CNAME"
   },
   "devDependencies": {
     "apidoc": "^0.17.6",
