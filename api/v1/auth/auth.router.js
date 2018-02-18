@@ -1,8 +1,9 @@
 const express = require('express')
 const authRouter = express.Router()
+const appRoot = require('app-root-path')
+const requireAuth = require(appRoot + '/middleware/requireAuth')
 
 module.exports = (app, config) => {
-  const requireAuth = require(config.rootPath + '/middleware/requireAuth')
   const authCtrl = require('./auth.controller')(config)
 
   authRouter.post('/', authCtrl.requestLogin)

@@ -2,10 +2,18 @@ const express = require('express')
 const apiRouter = express.Router()
 const os = require('os')
 const mongoose = require('mongoose')
+const appRoot = require('app-root-path')
+const pkg = require(appRoot + '/package.json')
+const RateLimit = require('express-rate-limit')
+
+const limiter = new RateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  delayMs: 0 // disable delaying - full speed until the max limit is reached
+})
 
 module.exports = function (app, config) {
-  const pkg = require(config.rootPath + '/package.json')
-
+  app.use('/v1', limiter)
   /**
    * @api {get} /v1 Get Version
    * @apiName GetVersion
