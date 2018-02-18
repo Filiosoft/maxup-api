@@ -1,6 +1,6 @@
 {
   "name": "maxup-api",
-  "version": "0.0.1",
+  "version": "0.0.1-canary.0",
   "description": "⚙ The API for maxup!",
   "main": "app.js",
   "repository": "filiosoft/maxup-api",
@@ -31,7 +31,7 @@
     "start": "node app.js",
     "test": "yarn run eslint-report && yarn run eslint",
     "eslint-report": "eslint . -f node_modules/eslint-html-reporter/reporter.js -o tests/eslint.html || exit 0",
-    "eslint": "eslint .",    
+    "eslint": "eslint .",
     "docs": "apidoc -i api/ -o docs/ && cp -r tests/ docs/"
   },
   "devDependencies": {
