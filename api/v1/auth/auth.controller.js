@@ -6,6 +6,9 @@ const removeExpiredRequests = require('./lib/removeExpired')
 const nodemailer = require('nodemailer')
 const exphbs = require('express-handlebars')
 const hbs = require('nodemailer-express-handlebars')
+const appRoot = require('app-root-path')
+const ConfirmationError = require(appRoot + '/lib/errors/confirmationFailed')
+const GenericError = require(appRoot + '/lib/errors/genericError')
 
 module.exports = (config) => {
   const transporter = nodemailer.createTransport(config.email)
@@ -22,7 +25,7 @@ module.exports = (config) => {
       } = req.body
 
       if (!email) {
-        return next('NoEmail')
+        return next(new GenericError('bad_request', 400, 'No email address was provided.'))
       }
 
       let user
@@ -93,10 +96,10 @@ module.exports = (config) => {
       } = req.query
       await removeExpiredRequests(email)
       if (!email) {
-        return next('NoEmail')
+        return next(new GenericError('bad_request', 400, 'No email address was provided.'))
       }
       if (!token) {
-        return next('NoToken')
+        return next(new GenericError('bad_request', 400, 'No confirmation token was provided.'))
       }
 
       const user = await User.findOne({
@@ -105,7 +108,7 @@ module.exports = (config) => {
 
       // if the user wasn't found, fail
       if (!user) {
-        return next('ConfirmationFailed')
+        return next(new ConfirmationError('confirmation_failed', 'Login confirmation failed.'))
       }
 
       const logins = user.__private.logins
@@ -115,12 +118,12 @@ module.exports = (config) => {
 
       // if the request wasn't found, fail
       if (!login) {
-        return next('ConfirmationFailed')
+        return next(new ConfirmationError('confirmation_failed', 'Login confirmation failed.'))
       }
 
       // if this request is already verified, fail
       if (login.verified) {
-        return next('ConfirmationFailed')
+        return next(new ConfirmationError('confirmation_failed', 'Login confirmation failed.'))
       }
       login.verified = true
 
@@ -142,10 +145,10 @@ module.exports = (config) => {
       } = req.query
       await removeExpiredRequests(email)
       if (!email) {
-        return next('NoEmail')
+        return next(new GenericError('bad_request', 400, 'No email address was provided.'))
       }
       if (!token) {
-        return next('NoToken')
+        return next(new GenericError('bad_request', 400, 'No confirmation token was provided.'))
       }
 
       const user = await User.findOne({
@@ -154,7 +157,7 @@ module.exports = (config) => {
 
       // if the user wasn't found, fail
       if (!user) {
-        return next('ConfirmationFailed')
+        return next(new ConfirmationError('confirmation_failed', 'Login confirmation failed.'))
       }
 
       const logins = user.__private.logins
@@ -164,12 +167,12 @@ module.exports = (config) => {
 
       // if the request wasn't found, fail
       if (!login) {
-        return next('ConfirmationFailed')
+        return next(new ConfirmationError('confirmation_failed', 'Login confirmation failed.'))
       }
 
       // if this request is already verified, fail
       if (!login.verified) {
-        return next('ConfirmationFailed')
+        return next(new ConfirmationError('confirmation_failed', 'Login confirmation failed.'))
       }
 
       // remove the login request from the user to keep things clean
@@ -200,7 +203,7 @@ module.exports = (config) => {
       }).select('-__private')
 
       if (!user) {
-        return next('NotFound')
+        return next(new GenericError('not_found', 404, 'The user was not found.'))
       }
 
       return res.status(200).json({

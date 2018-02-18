@@ -12,6 +12,9 @@ require('./config/express')(app)
 // Routes config
 require('./config/routes')(app, config)
 
+// Error handlers
+require('./config/handlers')(app)
+
 // Recuring tasks
 require('./config/tasks')()
 
