@@ -285,34 +285,6 @@
             "group": "Header",
             "type": "String",
             "optional": false,
-            "field": "Content-Length",
-            "description": "<p>The file size in bytes</p>"
-          },
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-maxup-digest",
-            "description": "<p>The file SHA1 used to check integrity</p>"
-          },
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-maxup-size",
-            "description": "<p>The file size in bytes</p>"
-          },
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-maxup-filename",
-            "description": "<p>The name of the file</p>"
-          },
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
             "field": "x-maxup-site",
             "description": "<p>Site to be deployed to</p>"
           }
@@ -331,12 +303,12 @@
     "examples": [
       {
         "title": "Example usage:",
-        "content": "curl -X POST \"https://api.zeit.co/v2/now/files\" \\\n   -H \"Authorization: Bearer $TOKEN\" \\\n   -H \"Content-Type: application/octet-stream\" \\\n   -H \"Content-Length: 145\" \\\n   -H \"x-maxup-digest: 514b5ffa5ef016df7f5f42370157d49f97526a42\" \\\n   -H \"x-maxup-size: 145\" \\\n   -H \"x-maxup-site: testsite.maxup.sh\"\n   -d 'file contents'",
+        "content": "curl -X POST \"https://api.zeit.co/v2/now/files\" \\\n   -H \"Authorization: Bearer $TOKEN\" \\\n   -H \"Content-Type: application/octet-stream\" \\\n   -H \"Content-Length: 145\" \\\n   -H \"x-maxup-site: testsite.maxup.sh\"\n   -d 'file contents'",
         "type": "curl"
       }
     ],
     "version": "0.0.0",
-    "filename": "api/v1/upload/upload.controller.js",
+    "filename": "api/v1/deploy/deploy.controller.js",
     "groupTitle": "Deploy",
     "sampleRequest": [
       {
