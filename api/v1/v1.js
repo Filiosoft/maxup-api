@@ -103,6 +103,8 @@ module.exports = function (app, config) {
 
   apiRouter.use('/auth', require('./auth/auth.router')(app, config))
 
+  apiRouter.use('/files', require('./deploy/deploy.router')(config))
+
   // Use it!
   app.use('/v1', apiRouter)
 }

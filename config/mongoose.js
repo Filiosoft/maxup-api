@@ -14,6 +14,7 @@ module.exports = async () => {
 
     // load all the models
     require('../api/v1/auth/auth.model')(config)
+    require('../api/v1/deploy/deploy.model')()
   } catch (err) {
     console.log(err)
   }

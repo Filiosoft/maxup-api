@@ -1,8 +1,8 @@
 require('dotenv').config()
-
+const nodeEnv = process.env.NODE_ENV
 const port = process.env.PORT || 4000
 let baseUrl
-if (process.env.NODE_ENV === 'development') {
+if (nodeEnv === 'development' || nodeEnv === undefined) {
   baseUrl = `http://localhost:${port}`
 } else {
   baseUrl = process.env.BASE_URL || 'https://api.maxup.sh'
