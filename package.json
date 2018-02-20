@@ -28,6 +28,7 @@
     "nodemailer": "^4.4.2",
     "nodemailer-express-handlebars": "^3.0.0",
     "nodemon": "^1.15.0",
+    "promise-limit": "^2.5.0",
     "uid-promise": "^1.0.0",
     "uuid": "^3.2.1"
   },

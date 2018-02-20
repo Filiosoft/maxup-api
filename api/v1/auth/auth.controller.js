@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
+const Login = mongoose.model('Login')
 const uid = require('uid-promise')
 const uuid = require('uuid/v4')
 const removeExpiredRequests = require('./lib/removeExpired')
@@ -76,19 +77,18 @@ module.exports = (config) => {
       // a login request id (lrid)
       // and a magic link id (mlid)
       // both have to be cryptographically secure
-      const login = {
+      const login = new Login({
+        user: user.email,
         lrid: await uid(20),
         mlid: await uuid(),
         exp: new Date(now.getTime() + expTime * 60000),
         created: now
-      }
+      })
 
-      user.__private.logins.push(login)
+      await login.save()
 
       // remove all expired login requests
-      removeExpiredRequests(email)
-
-      await user.save()
+      removeExpiredRequests(user.email)
 
       // send the verification link!
       const verificationLink = `${config.baseUrl}/confirm?email=${encodeURIComponent(user.email)}&token=${encodeURIComponent(login.mlid)}`
@@ -139,7 +139,6 @@ module.exports = (config) => {
         email,
         token
       } = req.query
-      await removeExpiredRequests(email)
       if (!email) {
         return next(new GenericError('bad_request', 400, 'No email address was provided.'))
       }
@@ -156,9 +155,11 @@ module.exports = (config) => {
         return next(new ConfirmationError('confirmation_failed', 'Login confirmation failed.'))
       }
 
-      const logins = user.__private.logins
-      let login = logins.find(login => {
-        return login.mlid === token
+      await removeExpiredRequests(user.email)
+
+      const login = await Login.findOne({
+        mlid: token,
+        user: user.email
       })
 
       // if the request wasn't found, fail
@@ -173,6 +174,7 @@ module.exports = (config) => {
       login.verified = true
 
       await user.save()
+      await login.save()
 
       return res.status(200).json({
         message: 'Login verified!'
@@ -207,7 +209,6 @@ module.exports = (config) => {
         email,
         token
       } = req.query
-      await removeExpiredRequests(email)
       if (!email) {
         return next(new GenericError('bad_request', 400, 'No email address was provided.'))
       }
@@ -224,9 +225,11 @@ module.exports = (config) => {
         return next(new ConfirmationError('confirmation_failed', 'Login confirmation failed.'))
       }
 
-      const logins = user.__private.logins
-      let login = logins.find(login => {
-        return login.lrid === token
+      await removeExpiredRequests(user.email)
+
+      const login = await Login.findOne({
+        lrid: token,
+        user: user.email
       })
 
       // if the request wasn't found, fail
@@ -240,9 +243,7 @@ module.exports = (config) => {
       }
 
       // remove the login request from the user to keep things clean
-      user.__private.logins = user.__private.logins.filter(login => {
-        return login.lrid !== token
-      })
+      await login.remove()
 
       await user.save()
 

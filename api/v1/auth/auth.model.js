@@ -9,6 +9,10 @@ module.exports = (config) => {
       required: true,
       unique: true
     },
+    user: {
+      type: String,
+      required: true
+    },
     mlid: {
       type: String,
       required: true,
@@ -33,9 +37,6 @@ module.exports = (config) => {
       type: String,
       unique: true,
       required: true
-    },
-    __private: {
-      logins: [loginSchema]
     }
   })
 
@@ -48,5 +49,11 @@ module.exports = (config) => {
     })
   }
 
-  return mongoose.model('User', userSchema)
+  const loginsModel = mongoose.model('Login', loginSchema)
+  const usersModel = mongoose.model('User', userSchema)
+
+  return {
+    usersModel,
+    loginsModel
+  }
 }

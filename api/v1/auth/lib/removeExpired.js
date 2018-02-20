@@ -1,24 +1,25 @@
 const mongoose = require('mongoose')
-const User = mongoose.model('User')
+const Login = mongoose.model('Login')
+
 module.exports = async (email) => {
   try {
-    const user = await User.findOne({
-      email
+    const logins = await Login.find({
+      user: email
     })
-    if (!user) {
+    if (!logins) {
       return
     }
-    user.__private.logins = user.__private.logins.filter(login => {
+
+    const loginMaps = logins.map(login => {
       const now = new Date()
       // we are past the expiration date, remove the login request
       if (login.exp < now) {
-        return false
-      } else {
-        return true
+        return login.remove()
       }
+      return true
     })
 
-    return user.save()
+    return Promise.all(loginMaps)
   } catch (err) {
     throw err
   }
