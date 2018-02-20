@@ -38,6 +38,7 @@ module.exports = (config) => {
    */
   const deploy = async (req, res, next) => {
     const site = req.headers['x-maxup-site']
+    const filename = req.headers['x-maxup-filename']
 
     if (!site) {
       return res.status(500).send('Please specifiy a site')
@@ -51,7 +52,7 @@ module.exports = (config) => {
         return res.status(500).send('User not found!')
       }
     } catch (err) {
-      console.log(err)
+      return res.status(500).send(err)
     }
 
     // find the deploy
@@ -72,7 +73,7 @@ module.exports = (config) => {
           owners: [user._id]
         })
       } catch (err) {
-        console.log(err)
+        return res.status(500).send(err)
       }
     }
 
@@ -85,14 +86,16 @@ module.exports = (config) => {
     }
 
     // check if the bucket exists
-    let noBucket = false
+    let noBucket = true
+    console.log(site)
     try {
       const headBucket = s3.headBucket({
         Bucket: site
       }).promise()
       await headBucket
+      noBucket = false
     } catch (err) {
-      noBucket = err.code === 'NotFound'
+      noBucket = true
     }
 
     // if there is no bucket, create it and set it up
@@ -108,6 +111,7 @@ module.exports = (config) => {
         console.log(bucket)
       } catch (err) {
         console.log(err)
+        return res.status(500).send(err)
       }
 
       // set the bucket policy
@@ -121,6 +125,7 @@ module.exports = (config) => {
         await putPolicy
       } catch (err) {
         console.log(err)
+        return res.status(500).send(err)
       }
 
       // put the bucket website settings
@@ -140,6 +145,7 @@ module.exports = (config) => {
         await putWebsite
       } catch (err) {
         console.log(err)
+        return res.status(500).send(err)
       }
     }
 
@@ -156,20 +162,21 @@ module.exports = (config) => {
         })
       },
       key: (req, file, cb) => {
-        cb(null, file.originalname)
+        cb(null, filename)
       }
     })
 
     // setup the upload
     const upload = promisify(multer({
       storage
-    }).array('files', 100))
+    }).array('files', 1))
 
     // upload
     try {
       await upload(req, res)
     } catch (err) {
       console.log(err)
+      return res.status(500).send(err)
     }
 
     // update the updated date and save the deploy
@@ -178,6 +185,7 @@ module.exports = (config) => {
       await deploy.save()
     } catch (err) {
       console.log(err)
+      return res.status(500).send(err)
     }
 
     // respond

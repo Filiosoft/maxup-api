@@ -13,7 +13,7 @@ const limiter = new RateLimit({
 })
 
 module.exports = function (app, config) {
-  app.use('/v1', limiter)
+  app.use('/v1/auth', limiter)
   /**
    * @api {get} /v1 Get Version
    * @apiName GetVersion
