@@ -15,6 +15,10 @@ module.exports = {
   jwtSecret: process.env.JWT_SECRET,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  flyToken: process.env.FLY_TOKEN,
+  cfEmail: process.env.CF_EMAIL,
+  cfKey: process.env.CF_KEY,
+  cfZone: process.env.CF_ZONE || '065993935e0c11311fbfd4a3707e67ab',
   baseUrl: baseUrl,
   emailFrom: process.env.EMAIL_FROM || '"maxup" <maxup@filiosoft.email',
   email: {

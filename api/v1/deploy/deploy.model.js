@@ -17,6 +17,7 @@ module.exports = () => {
       required: true,
       default: new Date()
     },
+    flyHost: String,
     updated: Date
   })
 

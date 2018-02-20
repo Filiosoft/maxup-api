@@ -2,6 +2,9 @@ const aws = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
 const mongoose = require('mongoose')
+const appRoot = require('app-root-path')
+const provisionCdn = require(`${appRoot}/lib/provisionCdn`)
+const provisionDns = require(`${appRoot}/lib/provisionDns`)
 const {
   promisify
 } = require('util')
@@ -110,6 +113,23 @@ module.exports = (config) => {
     // upload
     try {
       await upload(req, res)
+    } catch (err) {
+      console.log(err)
+      return res.status(500).send(err)
+    }
+
+    // provision CDN
+    try {
+      const flyHost = await provisionCdn(site)
+      deploy.flyHost = flyHost
+    } catch (err) {
+      console.log(err)
+      return res.status(500).send(err)
+    }
+
+    // provision DNS
+    try {
+      await provisionDns(site, deploy.flyHost)
     } catch (err) {
       console.log(err)
       return res.status(500).send(err)

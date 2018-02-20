@@ -8,5 +8,7 @@ module.exports = (app, config) => {
 
   deployRouter.post('/', requireAuth, deployCtrl.deploy)
 
+  // deployRouter.delete('/:site', requireAuth, deployCtrl.destroy)
+
   return deployRouter
 }
