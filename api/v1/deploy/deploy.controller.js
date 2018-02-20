@@ -85,74 +85,10 @@ module.exports = (config) => {
       return res.status(403).send('Forbiden')
     }
 
-    // check if the bucket exists
-    let noBucket = true
-    console.log(site)
-    try {
-      const headBucket = s3.headBucket({
-        Bucket: site
-      }).promise()
-      await headBucket
-      noBucket = false
-    } catch (err) {
-      noBucket = true
-    }
-
-    // if there is no bucket, create it and set it up
-    if (noBucket) {
-      // create the bucket
-      try {
-        const params = {
-          Bucket: site
-        }
-        const createBucket = s3.createBucket(params).promise()
-
-        const bucket = await createBucket
-        console.log(bucket)
-      } catch (err) {
-        console.log(err)
-        return res.status(500).send(err)
-      }
-
-      // set the bucket policy
-      try {
-        const policy = `{"Version": "2012-10-17","Statement": [{"Sid": "AddPerm","Effect": "Allow","Principal": "*","Action": "s3:GetObject","Resource": "arn:aws:s3:::${site}/*"}]}`
-        const params = {
-          Bucket: site,
-          Policy: policy
-        }
-        const putPolicy = s3.putBucketPolicy(params).promise()
-        await putPolicy
-      } catch (err) {
-        console.log(err)
-        return res.status(500).send(err)
-      }
-
-      // put the bucket website settings
-      try {
-        const params = {
-          Bucket: site,
-          WebsiteConfiguration: {
-            ErrorDocument: {
-              Key: 'error.html'
-            },
-            IndexDocument: {
-              Suffix: 'index.html'
-            }
-          }
-        }
-        const putWebsite = s3.putBucketWebsite(params).promise()
-        await putWebsite
-      } catch (err) {
-        console.log(err)
-        return res.status(500).send(err)
-      }
-    }
-
     // setup the uploader's storage
     const storage = multerS3({
       s3: s3,
-      bucket: site,
+      bucket: 'maxup',
       contentType: (req, file, cb) => {
         cb(null, file.mimetype)
       },
@@ -162,7 +98,7 @@ module.exports = (config) => {
         })
       },
       key: (req, file, cb) => {
-        cb(null, filename)
+        cb(null, `${site}/${filename}`)
       }
     })
 
