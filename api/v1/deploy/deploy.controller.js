@@ -60,6 +60,7 @@ module.exports = (config) => {
 
     // find the deploy
     let deploy
+    let newDeploy
     try {
       deploy = await Deploy.findOne({
         site
@@ -70,6 +71,7 @@ module.exports = (config) => {
 
     // if it doesn't exist, create the deploy
     if (!deploy) {
+      newDeploy = true
       try {
         deploy = new Deploy({
           site,
@@ -118,23 +120,24 @@ module.exports = (config) => {
       return res.status(500).send(err)
     }
 
-    // provision CDN
-    try {
-      const flyHost = await provisionCdn(site)
-      deploy.flyHost = flyHost
-    } catch (err) {
-      console.log(err)
-      return res.status(500).send(err)
-    }
+    if (newDeploy) {
+      // provision CDN
+      try {
+        const flyHost = await provisionCdn(site)
+        deploy.flyHost = flyHost
+      } catch (err) {
+        console.log(err)
+        return res.status(500).send(err)
+      }
 
-    // provision DNS
-    try {
-      await provisionDns(site, deploy.flyHost)
-    } catch (err) {
-      console.log(err)
-      return res.status(500).send(err)
+      // provision DNS
+      try {
+        await provisionDns(site, deploy.flyHost)
+      } catch (err) {
+        console.log(err)
+        return res.status(500).send(err)
+      }
     }
-
     // update the updated date and save the deploy
     try {
       deploy.updated = new Date()
