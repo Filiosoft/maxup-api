@@ -30,7 +30,8 @@
     "nodemon": "^1.15.0",
     "promise-limit": "^2.5.0",
     "uid-promise": "^1.0.0",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "snyk": "^1.103.4"
   },
   "scripts": {
     "dev": "nodemon app.js",
@@ -38,7 +39,9 @@
     "test": "yarn run eslint-report && yarn run eslint",
     "eslint-report": "eslint . -f node_modules/eslint-html-reporter/reporter.js -o tests/eslint.html || exit 0",
     "eslint": "eslint .",
-    "docs": "apidoc -i api/ -o docs/ && cp -r tests/ docs/"
+    "docs": "apidoc -i api/ -o docs/ && cp -r tests/ docs/",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "devDependencies": {
     "apidoc": "^0.17.6",
@@ -54,5 +57,6 @@
     "title": "maxup API Docs",
     "url": "https://api.maxup.sh",
     "sampleUrl": "https://api.maxup.sh"
-  }
+  },
+  "snyk": true
 }
