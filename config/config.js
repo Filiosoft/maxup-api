@@ -20,7 +20,7 @@ module.exports = {
   cfKey: process.env.CF_KEY,
   cfZone: process.env.CF_ZONE || '065993935e0c11311fbfd4a3707e67ab',
   baseUrl: baseUrl,
-  emailFrom: process.env.EMAIL_FROM || '"maxup" <maxup@filiosoft.email',
+  emailFrom: process.env.EMAIL_FROM || '"maxup" <hello@maxup.sh',
   email: {
     host: process.env.EMAIL_HOST || 'smtp.sendgrid.net',
     port: process.env.EMAIL_PORT || 587,

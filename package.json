@@ -3,8 +3,8 @@
   "version": "0.0.1-canary.0",
   "description": "⚙ The API for maxup!",
   "main": "app.js",
-  "repository": "filiosoft/maxup-api",
-  "author": "Filiosoft Open Source <opensource@filiosoft.com>",
+  "repository": "maxup-sh/maxup-api",
+  "author": "Noah Prail <noah@prail.net>",
   "license": "MIT",
   "dependencies": {
     "app-root-path": "^2.0.1",
@@ -35,7 +35,7 @@
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "test": "yarn run eslint-report && yarn run eslint",
+    "test": "npm run eslint-report && npm run eslint",
     "eslint-report": "eslint . -f node_modules/eslint-html-reporter/reporter.js -o tests/eslint.html || exit 0",
     "eslint": "eslint .",
     "docs": "apidoc -i api/ -o docs/ && cp -r tests/ docs/"
